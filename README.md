@@ -62,14 +62,14 @@ Los Endpoints creados que se conectan a la base de datos MYSQL son:
 
     Permite consultar todas las especies por nombre.  
 
-    URL:    https://m3q7nhr1ak.execute-api.us-east-2.amazonaws.com/dev/listarespecies/{nombre}
+    URL:    https://oi3ppomtoi.execute-api.us-east-2.amazonaws.com/dev/listarespecies/{nombre}
     METODO: GET  
 
 3. Crea especies:  
 
     Permite crear una especie, para ello se debe de enviar un JSON como body y en el parametro accion debera de tener los siguientes valores: INSERTAR.  
 
-    URL:    https://m3q7nhr1ak.execute-api.us-east-2.amazonaws.com/dev/especies  
+    URL:    https://oi3ppomtoi.execute-api.us-east-2.amazonaws.com/dev/especies  
     METODO: POST  
     JSON:  
 ```shell
@@ -105,7 +105,7 @@ Los Endpoints creados que se conectan a la base de datos MYSQL son:
 
     Permite eliminar una especie, para ello se debe de enviar un JSON como body y en el parametro accion debera de tener los siguientes valores: ELIMINAR.  
 
-    URL:    https://m3q7nhr1ak.execute-api.us-east-2.amazonaws.com/dev/especies  
+    URL:    https://oi3ppomtoi.execute-api.us-east-2.amazonaws.com/dev/especies  
     METODO: DELETE  
     JSON:  
 ```shell
@@ -135,21 +135,21 @@ Los Endpoints creados que se conectan a la base de datos MYSQL son:
 
     Permite consultar todas las peliculas.  
 
-    URL:    https://m3q7nhr1ak.execute-api.us-east-2.amazonaws.com/dev/listarpeliculas  
+    URL:    https://oi3ppomtoi.execute-api.us-east-2.amazonaws.com/dev/listarpeliculas  
     METODO: GET  
 
 6. Listar peliculas por titulo:  
 
     Permite consultar todas las peliculas por titulo.  
 
-    URL:    https://m3q7nhr1ak.execute-api.us-east-2.amazonaws.com/dev/listarpeliculas/{titulo}  
+    URL:    https://oi3ppomtoi.execute-api.us-east-2.amazonaws.com/dev/listarpeliculas/{titulo}  
     METODO: GET  
 
 7. Crea peliculas:  
 
     Permite crear una pelicula, para ello se debe de enviar un JSON como body y en el parametro accion debera de tener los siguientes valores: INSERTAR.  
 
-    URL:    https://m3q7nhr1ak.execute-api.us-east-2.amazonaws.com/dev/peliculas  
+    URL:    https://oi3ppomtoi.execute-api.us-east-2.amazonaws.com/dev/peliculas  
     METODO: POST  
     JSON:  
 ```shell
@@ -195,7 +195,7 @@ Los Endpoints creados que se conectan a la base de datos MYSQL son:
 
     Permite eliminar una pelicula, para ello se debe de enviar un JSON como body y en el parametro accion debera de tener los siguientes valores: ELIMINAR.  
 
-    URL:    https://m3q7nhr1ak.execute-api.us-east-2.amazonaws.com/dev/peliculas  
+    URL:    https://oi3ppomtoi.execute-api.us-east-2.amazonaws.com/dev/peliculas  
     METODO: DELETE  
     JSON:  
 ```shell
