@@ -14,5 +14,10 @@ app.listen(port, () => {
 });
 
 //execute deploy AWS: npx serverless deploy
+
 //execute offline: npx serverless offline
+//execute: npx mocha tests/getEspecies.test.js
+//execute: npx mocha tests/getEspeciesPornombre.test.js
+
 //execute swagger: node app.js
+// swagger: http://localhost:5000/api-docs/#/

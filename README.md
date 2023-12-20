@@ -40,6 +40,15 @@ npm install express
 # Ejemplo de comandos para la instalación de Mysql
 npm install mysql
 ```
+```shell
+# Ejemplo de comandos para la instalación del ambiente offline de serverless aws
+npm install serverless-offline
+```
+```shell
+# Ejemplo de comandos para la instalación del framework para el test
+npm install mocha
+```
+
 
 ## Arquitectura
 
