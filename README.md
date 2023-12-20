@@ -10,7 +10,14 @@ A continuación se describe el reto técnico:
 4. Crear un modelo de su elección mediante el uso de un endpoint POST, la data se tendrá que almacenar dentro de una base de datos. 
 5. Crear un endpoint GET que muestre la data almacenada. 
 6. El proyecto se integra con una base de datos en MYSQL utilizando el servicio RDS de Amazon. 
-7. El lengiuaje de programación es Node.js 
+
+Consideraciones del Proyecto:
+
+1. El lenguaje de programación es Node.js y JavaScript
+2. El proyecto tiene pruebas unitarias con el framework de MOCHA y librerias CHAI
+3. La documentacion de uso esta en el README del GITHUB
+4. Se despliega en AWS sin errores con el comando DEPLOY
+5. Se realiza la documentacion de los API con SWAGGER
 
 
 API de prueba SWAPI: https://swapi.py4e.com/documentation
@@ -47,6 +54,14 @@ npm install serverless-offline
 ```shell
 # Ejemplo de comandos para la instalación del framework para el test
 npm install mocha
+```
+```shell
+# Ejemplo de comandos para la instalación de la libreria de aserciones para el test
+npm install chai
+```
+```shell
+# Ejemplo de comandos para la instalación de la libreria de peticiones para el test
+npm install chai-http
 ```
 
 
