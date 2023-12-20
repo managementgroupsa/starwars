@@ -13,4 +13,6 @@ app.listen(port, () => {
   console.log(`Servidor en ejecución en el puerto ${port}`);
 });
 
-//execute: node app.js
+//execute deploy AWS: npx serverless deploy
+//execute offline: npx serverless offline
+//execute swagger: node app.js
