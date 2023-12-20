@@ -1,0 +1,110 @@
+
+service: prueba-starwars
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: us-east-2
+  apiGateway:
+    shouldStartNameWithService: true
+ 
+functions:
+  getEspecies:
+    handler: src/functions/especies/getEspecies.handler
+    events:
+      - http:
+          path: /listarespecies
+          method: GET
+
+  getEspeciesPorNombre:
+    handler: src/functions/especies/getEspeciesPorNombre.handler
+    events:
+      - http:
+          path: /listarespecies/{nombre}
+          method: GET
+
+
+  postEspecies:
+    handler: src/functions/especies/postEspecies.handler
+    events:
+      - http:
+          path: /especies
+          method: POST          
+
+  deleteEspecies:
+    handler: src/functions/especies/deleteEspecies.handler
+    events:
+      - http:
+          path: /especies
+          method: DELETE   
+
+  getPeliculas:
+    handler: src/functions/peliculas/getPeliculas.handler
+    events:
+      - http:
+          path: /listarpeliculas
+          method: GET
+  
+  getPeliculasPortitulo:
+    handler: src/functions/peliculas/getPeliculasPortitulo.handler
+    events:
+      - http:
+          path: /listarpeliculas/{titulo}
+          method: GET
+
+  postPeliculas:
+    handler: src/functions/peliculas/postPeliculas.handler
+    events:
+      - http:
+          path: /peliculas
+          method: POST   
+
+  deletePeliculas:
+    handler: src/functions/peliculas/deletePeliculas.handler
+    events:
+      - http:
+          path: /peliculas
+          method: DELETE   
+
+  getSwapiRaiz:
+    handler: src/functions/swapi/getSwapiRaiz.handler
+    events:
+      - http:
+          path: /swapiraiz
+          method: GET
+
+  getSwapiPersonas:
+    handler: src/functions/swapi/getSwapiPersonas.handler
+    events:
+      - http:
+          path: /swapipersonas
+          method: GET
+
+  getSwapiPersonaPorNombre:
+    handler: src/functions/swapi/getSwapiPersonaPorNombre.handler
+    events:
+      - http:
+          path: /swapipersonas/{nombre}
+          method: GET
+
+  getSwapiPeliculas:
+    handler: src/functions/swapi/getSwapiPeliculas.handler
+    events:
+      - http:
+          path: /swapipeliculas
+          method: GET
+
+  getSwapiPeliculasPorTitulo:
+    handler: src/functions/swapi/getSwapiPeliculasPorTitulo.handler
+    events:
+      - http:
+          path: /swapipeliculas/{titulo}
+          method: GET
+
+plugins:
+  - serverless-offline
+  
+#  Execute : sls offline

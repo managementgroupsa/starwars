@@ -1,0 +1,2483 @@
+{
+  "service": {
+    "service": "prueba-starwars",
+    "serviceObject": {
+      "name": "prueba-starwars"
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "nodejs18.x",
+      "stage": "dev",
+      "region": "us-east-2",
+      "apiGateway": {
+        "shouldStartNameWithService": true
+      },
+      "versionFunctions": true,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "GetEspeciesLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-getEspecies"
+            }
+          },
+          "GetEspeciesPorNombreLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-getEspeciesPorNombre"
+            }
+          },
+          "PostEspeciesLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-postEspecies"
+            }
+          },
+          "DeleteEspeciesLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-deleteEspecies"
+            }
+          },
+          "GetPeliculasLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-getPeliculas"
+            }
+          },
+          "GetPeliculasPortituloLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-getPeliculasPortitulo"
+            }
+          },
+          "PostPeliculasLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-postPeliculas"
+            }
+          },
+          "DeletePeliculasLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-deletePeliculas"
+            }
+          },
+          "GetSwapiRaizLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-getSwapiRaiz"
+            }
+          },
+          "GetSwapiPersonasLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-getSwapiPersonas"
+            }
+          },
+          "GetSwapiPersonaPorNombreLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-getSwapiPersonaPorNombre"
+            }
+          },
+          "GetSwapiPeliculasLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-getSwapiPeliculas"
+            }
+          },
+          "GetSwapiPeliculasPorTituloLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/prueba-starwars-dev-getSwapiPeliculasPorTitulo"
+            }
+          },
+          "IamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "prueba-starwars",
+                        "dev",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream",
+                          "logs:CreateLogGroup",
+                          "logs:TagResource"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/prueba-starwars-dev*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/prueba-starwars-dev*:*:*"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "prueba-starwars",
+                    "dev",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    "lambdaRole"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetEspeciesLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/especies/getEspecies.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-getEspecies",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetEspeciesLogGroup"
+            ]
+          },
+          "GetEspeciesPorNombreLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/especies/getEspeciesPorNombre.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-getEspeciesPorNombre",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetEspeciesPorNombreLogGroup"
+            ]
+          },
+          "PostEspeciesLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/especies/postEspecies.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-postEspecies",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "PostEspeciesLogGroup"
+            ]
+          },
+          "DeleteEspeciesLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/especies/deleteEspecies.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-deleteEspecies",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "DeleteEspeciesLogGroup"
+            ]
+          },
+          "GetPeliculasLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/peliculas/getPeliculas.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-getPeliculas",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetPeliculasLogGroup"
+            ]
+          },
+          "GetPeliculasPortituloLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/peliculas/getPeliculasPortitulo.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-getPeliculasPortitulo",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetPeliculasPortituloLogGroup"
+            ]
+          },
+          "PostPeliculasLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/peliculas/postPeliculas.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-postPeliculas",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "PostPeliculasLogGroup"
+            ]
+          },
+          "DeletePeliculasLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/peliculas/deletePeliculas.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-deletePeliculas",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "DeletePeliculasLogGroup"
+            ]
+          },
+          "GetSwapiRaizLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/swapi/getSwapiRaiz.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-getSwapiRaiz",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetSwapiRaizLogGroup"
+            ]
+          },
+          "GetSwapiPersonasLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/swapi/getSwapiPersonas.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-getSwapiPersonas",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetSwapiPersonasLogGroup"
+            ]
+          },
+          "GetSwapiPersonaPorNombreLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/swapi/getSwapiPersonaPorNombre.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-getSwapiPersonaPorNombre",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetSwapiPersonaPorNombreLogGroup"
+            ]
+          },
+          "GetSwapiPeliculasLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/swapi/getSwapiPeliculas.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-getSwapiPeliculas",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetSwapiPeliculasLogGroup"
+            ]
+          },
+          "GetSwapiPeliculasPorTituloLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z/prueba-starwars.zip"
+              },
+              "Handler": "src/functions/swapi/getSwapiPeliculasPorTitulo.handler",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "prueba-starwars-dev-getSwapiPeliculasPorTitulo",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetSwapiPeliculasPorTituloLogGroup"
+            ]
+          },
+          "GetEspeciesLambdaVersionIIbMkMpAgSMSBbsRmfWHg7W2kinEoQsGUMEbH8fe2nk": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetEspeciesLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "GetEspeciesPorNombreLambdaVersionUrnQidEaTMvWIINE5JmU2OG8q9PRqkbX3NCkE2KKM": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetEspeciesPorNombreLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "PostEspeciesLambdaVersionnrN2COvPO6IW6gR74EmzPKCjrb2D0JGgRORQOW0ioHQ": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "PostEspeciesLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "DeleteEspeciesLambdaVersionkssndOeHudLkRkfH6vHMZURAGTInZq0P00rtuDMlo": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "DeleteEspeciesLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "GetPeliculasLambdaVersion5g5gXHOJzGJFzFqws26LeZU2KYjxkTPaXIP0NX6Dk": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetPeliculasLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "GetPeliculasPortituloLambdaVersioncRKecBk0OZUeaViXe4ctYNAR9wqIJdq0s0O73LZRYtY": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetPeliculasPortituloLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "PostPeliculasLambdaVersionE7x1tF9brEgcJK946ys2Ri61s40tlgGMvXbYLcXqAg": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "PostPeliculasLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "DeletePeliculasLambdaVersiono4H0fduf1JN71boOphQtqByKFmxaxusrsErRNKeqPzI": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "DeletePeliculasLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "GetSwapiRaizLambdaVersionuc7bd99uncTZQSd7Mu6p8IeJ9bXCtRPnuBY4LFrwpE": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetSwapiRaizLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "GetSwapiPersonasLambdaVersion0J2WiFZXZRzvfa2IZngtmfD7jske7f0G1LTmxmLR9Rc": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetSwapiPersonasLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "GetSwapiPersonaPorNombreLambdaVersionB0wQZEaHgXUWACpuDqrDqZcri2DL7hpzux56kitCmo": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetSwapiPersonaPorNombreLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "GetSwapiPeliculasLambdaVersionTDAK773WPk1gtyWX4O4AfUnFrGGWumsXez5UsZm37ac": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetSwapiPeliculasLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "GetSwapiPeliculasPorTituloLambdaVersionSEXiJr2nAz1ml9DAwsrqYUacg25TiHlJKVSYfiBOQw": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetSwapiPeliculasPorTituloLambdaFunction"
+              },
+              "CodeSha256": "fDd1yzJ/7axUc2qjB6yQoXtkXs98lyEM2dWDFQMDRIU="
+            }
+          },
+          "ApiGatewayRestApi": {
+            "Type": "AWS::ApiGateway::RestApi",
+            "Properties": {
+              "Name": "prueba-starwars-dev",
+              "EndpointConfiguration": {
+                "Types": [
+                  "EDGE"
+                ]
+              },
+              "Policy": ""
+            }
+          },
+          "ApiGatewayResourceListarespecies": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "listarespecies",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceListarespeciesNombreVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceListarespecies"
+              },
+              "PathPart": "{nombre}",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceEspecies": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "especies",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceListarpeliculas": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "listarpeliculas",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceListarpeliculasTituloVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceListarpeliculas"
+              },
+              "PathPart": "{titulo}",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourcePeliculas": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "peliculas",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceSwapiraiz": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "swapiraiz",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceSwapipersonas": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "swapipersonas",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceSwapipersonasNombreVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceSwapipersonas"
+              },
+              "PathPart": "{nombre}",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceSwapipeliculas": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "swapipeliculas",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceSwapipeliculasTituloVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceSwapipeliculas"
+              },
+              "PathPart": "{titulo}",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodListarespeciesGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceListarespecies"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetEspeciesLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetEspeciesLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodListarespeciesNombreVarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceListarespeciesNombreVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetEspeciesPorNombreLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetEspeciesPorNombreLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodEspeciesPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceEspecies"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "PostEspeciesLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "PostEspeciesLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodEspeciesDelete": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "DELETE",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceEspecies"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "DeleteEspeciesLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "DeleteEspeciesLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodListarpeliculasGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceListarpeliculas"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetPeliculasLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetPeliculasLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodListarpeliculasTituloVarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceListarpeliculasTituloVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetPeliculasPortituloLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetPeliculasPortituloLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodPeliculasPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourcePeliculas"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "PostPeliculasLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "PostPeliculasLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodPeliculasDelete": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "DELETE",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourcePeliculas"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "DeletePeliculasLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "DeletePeliculasLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodSwapiraizGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceSwapiraiz"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetSwapiRaizLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetSwapiRaizLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodSwapipersonasGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceSwapipersonas"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetSwapiPersonasLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetSwapiPersonasLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodSwapipersonasNombreVarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceSwapipersonasNombreVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetSwapiPersonaPorNombreLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetSwapiPersonaPorNombreLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodSwapipeliculasGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceSwapipeliculas"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetSwapiPeliculasLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetSwapiPeliculasLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodSwapipeliculasTituloVarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceSwapipeliculasTituloVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetSwapiPeliculasPorTituloLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetSwapiPeliculasPorTituloLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayDeployment1703033449478": {
+            "Type": "AWS::ApiGateway::Deployment",
+            "Properties": {
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "StageName": "dev"
+            },
+            "DependsOn": [
+              "ApiGatewayMethodListarespeciesGet",
+              "ApiGatewayMethodListarespeciesNombreVarGet",
+              "ApiGatewayMethodEspeciesPost",
+              "ApiGatewayMethodEspeciesDelete",
+              "ApiGatewayMethodListarpeliculasGet",
+              "ApiGatewayMethodListarpeliculasTituloVarGet",
+              "ApiGatewayMethodPeliculasPost",
+              "ApiGatewayMethodPeliculasDelete",
+              "ApiGatewayMethodSwapiraizGet",
+              "ApiGatewayMethodSwapipersonasGet",
+              "ApiGatewayMethodSwapipersonasNombreVarGet",
+              "ApiGatewayMethodSwapipeliculasGet",
+              "ApiGatewayMethodSwapipeliculasTituloVarGet"
+            ]
+          },
+          "GetEspeciesLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetEspeciesLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetEspeciesPorNombreLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetEspeciesPorNombreLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "PostEspeciesLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "PostEspeciesLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "DeleteEspeciesLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "DeleteEspeciesLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetPeliculasLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetPeliculasLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetPeliculasPortituloLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetPeliculasPortituloLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "PostPeliculasLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "PostPeliculasLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "DeletePeliculasLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "DeletePeliculasLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetSwapiRaizLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetSwapiRaizLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetSwapiPersonasLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetSwapiPersonasLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetSwapiPersonaPorNombreLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetSwapiPersonaPorNombreLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetSwapiPeliculasLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetSwapiPeliculasLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetSwapiPeliculasPorTituloLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetSwapiPeliculasPorTituloLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-ServerlessDeploymentBucketName"
+            }
+          },
+          "GetEspeciesLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetEspeciesLambdaVersionIIbMkMpAgSMSBbsRmfWHg7W2kinEoQsGUMEbH8fe2nk"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-GetEspeciesLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetEspeciesPorNombreLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetEspeciesPorNombreLambdaVersionUrnQidEaTMvWIINE5JmU2OG8q9PRqkbX3NCkE2KKM"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-GetEspeciesPorNombreLambdaFunctionQualifiedArn"
+            }
+          },
+          "PostEspeciesLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "PostEspeciesLambdaVersionnrN2COvPO6IW6gR74EmzPKCjrb2D0JGgRORQOW0ioHQ"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-PostEspeciesLambdaFunctionQualifiedArn"
+            }
+          },
+          "DeleteEspeciesLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "DeleteEspeciesLambdaVersionkssndOeHudLkRkfH6vHMZURAGTInZq0P00rtuDMlo"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-DeleteEspeciesLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetPeliculasLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetPeliculasLambdaVersion5g5gXHOJzGJFzFqws26LeZU2KYjxkTPaXIP0NX6Dk"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-GetPeliculasLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetPeliculasPortituloLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetPeliculasPortituloLambdaVersioncRKecBk0OZUeaViXe4ctYNAR9wqIJdq0s0O73LZRYtY"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-GetPeliculasPortituloLambdaFunctionQualifiedArn"
+            }
+          },
+          "PostPeliculasLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "PostPeliculasLambdaVersionE7x1tF9brEgcJK946ys2Ri61s40tlgGMvXbYLcXqAg"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-PostPeliculasLambdaFunctionQualifiedArn"
+            }
+          },
+          "DeletePeliculasLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "DeletePeliculasLambdaVersiono4H0fduf1JN71boOphQtqByKFmxaxusrsErRNKeqPzI"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-DeletePeliculasLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetSwapiRaizLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetSwapiRaizLambdaVersionuc7bd99uncTZQSd7Mu6p8IeJ9bXCtRPnuBY4LFrwpE"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-GetSwapiRaizLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetSwapiPersonasLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetSwapiPersonasLambdaVersion0J2WiFZXZRzvfa2IZngtmfD7jske7f0G1LTmxmLR9Rc"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-GetSwapiPersonasLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetSwapiPersonaPorNombreLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetSwapiPersonaPorNombreLambdaVersionB0wQZEaHgXUWACpuDqrDqZcri2DL7hpzux56kitCmo"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-GetSwapiPersonaPorNombreLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetSwapiPeliculasLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetSwapiPeliculasLambdaVersionTDAK773WPk1gtyWX4O4AfUnFrGGWumsXez5UsZm37ac"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-GetSwapiPeliculasLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetSwapiPeliculasPorTituloLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetSwapiPeliculasPorTituloLambdaVersionSEXiJr2nAz1ml9DAwsrqYUacg25TiHlJKVSYfiBOQw"
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-GetSwapiPeliculasPorTituloLambdaFunctionQualifiedArn"
+            }
+          },
+          "ServiceEndpoint": {
+            "Description": "URL of the service endpoint",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/dev"
+                ]
+              ]
+            },
+            "Export": {
+              "Name": "sls-prueba-starwars-dev-ServiceEndpoint"
+            }
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      },
+      "vpc": {}
+    },
+    "plugins": [
+      "serverless-offline"
+    ],
+    "pluginsData": {},
+    "functions": {
+      "getEspecies": {
+        "handler": "src/functions/especies/getEspecies.handler",
+        "events": [
+          {
+            "http": {
+              "path": "listarespecies",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-getEspecies",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "GetEspeciesLambdaVersionIIbMkMpAgSMSBbsRmfWHg7W2kinEoQsGUMEbH8fe2nk"
+      },
+      "getEspeciesPorNombre": {
+        "handler": "src/functions/especies/getEspeciesPorNombre.handler",
+        "events": [
+          {
+            "http": {
+              "path": "listarespecies/{nombre}",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-getEspeciesPorNombre",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "GetEspeciesPorNombreLambdaVersionUrnQidEaTMvWIINE5JmU2OG8q9PRqkbX3NCkE2KKM"
+      },
+      "postEspecies": {
+        "handler": "src/functions/especies/postEspecies.handler",
+        "events": [
+          {
+            "http": {
+              "path": "especies",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-postEspecies",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "PostEspeciesLambdaVersionnrN2COvPO6IW6gR74EmzPKCjrb2D0JGgRORQOW0ioHQ"
+      },
+      "deleteEspecies": {
+        "handler": "src/functions/especies/deleteEspecies.handler",
+        "events": [
+          {
+            "http": {
+              "path": "especies",
+              "method": "delete",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-deleteEspecies",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "DeleteEspeciesLambdaVersionkssndOeHudLkRkfH6vHMZURAGTInZq0P00rtuDMlo"
+      },
+      "getPeliculas": {
+        "handler": "src/functions/peliculas/getPeliculas.handler",
+        "events": [
+          {
+            "http": {
+              "path": "listarpeliculas",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-getPeliculas",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "GetPeliculasLambdaVersion5g5gXHOJzGJFzFqws26LeZU2KYjxkTPaXIP0NX6Dk"
+      },
+      "getPeliculasPortitulo": {
+        "handler": "src/functions/peliculas/getPeliculasPortitulo.handler",
+        "events": [
+          {
+            "http": {
+              "path": "listarpeliculas/{titulo}",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-getPeliculasPortitulo",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "GetPeliculasPortituloLambdaVersioncRKecBk0OZUeaViXe4ctYNAR9wqIJdq0s0O73LZRYtY"
+      },
+      "postPeliculas": {
+        "handler": "src/functions/peliculas/postPeliculas.handler",
+        "events": [
+          {
+            "http": {
+              "path": "peliculas",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-postPeliculas",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "PostPeliculasLambdaVersionE7x1tF9brEgcJK946ys2Ri61s40tlgGMvXbYLcXqAg"
+      },
+      "deletePeliculas": {
+        "handler": "src/functions/peliculas/deletePeliculas.handler",
+        "events": [
+          {
+            "http": {
+              "path": "peliculas",
+              "method": "delete",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-deletePeliculas",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "DeletePeliculasLambdaVersiono4H0fduf1JN71boOphQtqByKFmxaxusrsErRNKeqPzI"
+      },
+      "getSwapiRaiz": {
+        "handler": "src/functions/swapi/getSwapiRaiz.handler",
+        "events": [
+          {
+            "http": {
+              "path": "swapiraiz",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-getSwapiRaiz",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "GetSwapiRaizLambdaVersionuc7bd99uncTZQSd7Mu6p8IeJ9bXCtRPnuBY4LFrwpE"
+      },
+      "getSwapiPersonas": {
+        "handler": "src/functions/swapi/getSwapiPersonas.handler",
+        "events": [
+          {
+            "http": {
+              "path": "swapipersonas",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-getSwapiPersonas",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "GetSwapiPersonasLambdaVersion0J2WiFZXZRzvfa2IZngtmfD7jske7f0G1LTmxmLR9Rc"
+      },
+      "getSwapiPersonaPorNombre": {
+        "handler": "src/functions/swapi/getSwapiPersonaPorNombre.handler",
+        "events": [
+          {
+            "http": {
+              "path": "swapipersonas/{nombre}",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-getSwapiPersonaPorNombre",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "GetSwapiPersonaPorNombreLambdaVersionB0wQZEaHgXUWACpuDqrDqZcri2DL7hpzux56kitCmo"
+      },
+      "getSwapiPeliculas": {
+        "handler": "src/functions/swapi/getSwapiPeliculas.handler",
+        "events": [
+          {
+            "http": {
+              "path": "swapipeliculas",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-getSwapiPeliculas",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "GetSwapiPeliculasLambdaVersionTDAK773WPk1gtyWX4O4AfUnFrGGWumsXez5UsZm37ac"
+      },
+      "getSwapiPeliculasPorTitulo": {
+        "handler": "src/functions/swapi/getSwapiPeliculasPorTitulo.handler",
+        "events": [
+          {
+            "http": {
+              "path": "swapipeliculas/{titulo}",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "prueba-starwars-dev-getSwapiPeliculasPorTitulo",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "GetSwapiPeliculasPorTituloLambdaVersionSEXiJr2nAz1ml9DAwsrqYUacg25TiHlJKVSYfiBOQw"
+      }
+    },
+    "configValidationMode": "warn",
+    "serviceFilename": "serverless.yml",
+    "initialServerlessConfig": {
+      "service": "prueba-starwars",
+      "frameworkVersion": "3",
+      "provider": {
+        "$ref": "$[\"service\"][\"provider\"]"
+      },
+      "functions": {
+        "$ref": "$[\"service\"][\"functions\"]"
+      },
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      }
+    },
+    "layers": {},
+    "isDashboardMonitoringPreconfigured": false,
+    "artifact": "D:\\miguel.lopez\\MyCloud\\FUENTES\\REACT\\starwars\\.serverless\\prueba-starwars.zip"
+  },
+  "package": {
+    "artifactDirectoryName": "serverless/prueba-starwars/dev/1703033460400-2023-12-20T00:51:00.400Z",
+    "artifact": "prueba-starwars.zip"
+  }
+}
