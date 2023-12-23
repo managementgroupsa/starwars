@@ -67,7 +67,7 @@ module.exports.handler = async (event) => {
 
     const responseBody = {
       status: 'success',
-      message: 'La solicitud se completó exitosamente',
+      message: 'La solicitud se completó exitosamente.',
       data: peliculas
     };
     
@@ -81,7 +81,7 @@ module.exports.handler = async (event) => {
     console.error('Error:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: 'Error interno del servidor' }),
+      body: JSON.stringify({ message: 'Error interno del servidor.' }),
     };
   } finally {
     connection.end();

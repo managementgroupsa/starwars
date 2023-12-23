@@ -13,7 +13,7 @@ describe('Prueba de rutas HTTP en /listarespecies', () => {
         expect(res).to.have.status(200);
 
         expect(res.body).to.have.property('status').to.equal('success');
-        expect(res.body).to.have.property('message').to.equal('La solicitud se completó exitosamente');
+        expect(res.body).to.have.property('message').to.equal('La solicitud se completó exitosamente.');
         expect(res.body).to.have.property('data').to.be.an('array'); 
 
         done();

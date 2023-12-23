@@ -36,31 +36,31 @@ API de prueba SWAPI: https://swapi.py4e.com/documentation
 Una vez descargado el proyecto se debera de instalar las siguientes dependencias:
 
 ```shell
-# Ejemplo de comandos para la instalación de axios
+# Ejemplo de comandos para la instalación de axios.
 npm install axios
 ```
 ```shell
-# Ejemplo de comandos para la instalación de express
+# Ejemplo de comandos para la instalación de express.
 npm install express
 ```
 ```shell
-# Ejemplo de comandos para la instalación de Mysql
+# Ejemplo de comandos para la instalación de Mysql.
 npm install mysql
 ```
 ```shell
-# Ejemplo de comandos para la instalación del ambiente offline de serverless aws
+# Ejemplo de comandos para la instalación del ambiente offline de serverless aws.
 npm install serverless-offline
 ```
 ```shell
-# Ejemplo de comandos para la instalación del framework para el test
+# Ejemplo de comandos para la instalación del framework para el test.
 npm install mocha
 ```
 ```shell
-# Ejemplo de comandos para la instalación de la libreria de aserciones para el test
+# Ejemplo de comandos para la instalación de la libreria de aserciones para el test.
 npm install chai
 ```
 ```shell
-# Ejemplo de comandos para la instalación de la libreria de peticiones para el test
+# Ejemplo de comandos para la instalación de la libreria de peticiones para el test.
 npm install chai-http
 ```
 

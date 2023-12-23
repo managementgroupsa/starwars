@@ -10,7 +10,7 @@ module.exports.handler = async (event) => {
     console.error(error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Error al llamar a la API externa' }),
+      body: JSON.stringify({ error: 'Error al llamar a la API externa.' }),
     };
   }
 };

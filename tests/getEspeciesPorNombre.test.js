@@ -6,7 +6,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('Validación de entrada en /listarespecies/:nombre', () => {
-  it('debería responder con un código de estado 400 si el nombre es un número', (done) => {
+  it('debería responder con un código de estado 400 si el nombre es un número.', (done) => {
     chai.request(`http://localhost:3000/dev`)
     .get('/listarespecies/1')
       .end((err, res) => {

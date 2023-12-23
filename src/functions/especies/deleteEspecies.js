@@ -115,7 +115,7 @@ module.exports.handler = async (event) => {
 
     const responseBody = {
       status: 'success',
-      message: 'La solicitud se completó exitosamente',
+      message: 'La solicitud se completó exitosamente.',
     };
 
     return {

@@ -31,7 +31,7 @@ module.exports.handler = async (event) => {
     if (!isNaN(p_nombre)) {
       const response = {
         statusCode: 400,
-        body: JSON.stringify({ error: "El valor de 'nombre' es numérico" }),
+        body: JSON.stringify({ error: "El valor de 'nombre' es numérico." }),
       };
       return response;
     }
@@ -80,7 +80,7 @@ module.exports.handler = async (event) => {
 
     const responseBody = {
       status: 'success',
-      message: 'La solicitud se completó exitosamente',
+      message: 'La solicitud se completó exitosamente.',
       data: especies
     };
 
@@ -92,7 +92,7 @@ module.exports.handler = async (event) => {
     console.error('Error:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: 'Error interno del servidor' }),
+      body: JSON.stringify({ message: 'Error interno del servidor.' }),
     };
   } finally {
     connection.end();
